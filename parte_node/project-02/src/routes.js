@@ -4,7 +4,7 @@ const routes = Router();
 
 // cria uma rota get para testar a api
 app.get("/health", (request, response) => {
-  response.send("Seja bem vindo a minha API");
+  return response.status(200).json("Seja bem vindo a minha API");
 });
 
 // Cria um array para simular um banco de dados
@@ -20,12 +20,12 @@ app.post("/users", (request, response) => {
   };
   users.push(newUser);
 
-  response.send(newUser);
+  return response.status(201).json(newUser);
 });
 
 //rota get pra listar todos os usuarios
 app.get("/users", (request, response) => {
-  response.send(users);
+  return response.status(200).json(users);
 });
 
 //cria uma rota ger para listar um usuario especifico
@@ -34,8 +34,10 @@ app.get("/users/:id", (request, response) => {
     (user) => user.id == parseInt(request.params.id),
   );
 
-  if (!currrentUser) response.send("Nao foi encontrado nenhum usuario");
-  response.send(currrentUser);
+  if (!currrentUser)
+    return response.status(404).json("Nao foi encontrado nenhum usuario");
+
+  return response.status(200).json(currrentUser);
 });
 
 //cria uma rota para deletar um usuario
@@ -44,11 +46,12 @@ app.delete("/users/:id", (request, response) => {
     (user) => user.id === parseInt(request.params.id),
   );
 
-  if (index === -1) response.send("Nao foi encontrado nenhum usuario");
+  if (index === -1)
+    return response.status(404).json("Nao foi encontrado nenhum usuario");
 
   users.splice(index, 1);
 
-  response.send("Usuario removido com sucesso");
+  return response.status(200).json("Usuario removido com sucesso");
 });
 
 //cria uma rota para atualizar um usuario
@@ -59,7 +62,8 @@ app.put("/users/:id", (request, response) => {
     (user) => user.id === parseInt(request.params.id),
   );
 
-  if (index === -1) response.send("Nao foi encontrado nenhum usuario");
+  if (index === -1)
+    return response.status(404).json("Nao foi encontrado nenhum usuario");
 
   const updateUser = {
     id: users[index].id,
@@ -69,7 +73,7 @@ app.put("/users/:id", (request, response) => {
 
   users[index] = updateUser;
 
-  response.send(updateUser);
+  return response.status(200).json(updateUser);
 });
 
 export default routes;
